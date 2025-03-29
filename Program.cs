@@ -1,10 +1,3 @@
-using MongoDB.Driver;
-
-using (var cursor = await DataBase.DataBaseDB.client.ListDatabasesAsync())
-{
-    var databases = cursor.ToList();
-    foreach (var database in databases)
-    {
-        Console.WriteLine(database);
-    }
-}
+Console.WriteLine("hello world");
+Console.WriteLine(ServerInfo.ServerCryptor.AesEncryptionString("hello world"));
+Console.WriteLine(ServerInfo.ServerCryptor.AesDecryptionString(ServerInfo.ServerCryptor.AesEncryptionString("hello world")));

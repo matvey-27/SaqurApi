@@ -12,6 +12,36 @@ class Cryptor{
         this.DataBaseAesKey = DataBaseAesKey;
         this.DataBaseAesIv = DataBaseAesIv;
     }
+    public string AesEncryptionString(string data)
+    {
+        using Aes aes = Aes.Create();
+        aes.Key = DataBaseAesKey;
+        aes.IV = DataBaseAesIv;
+
+        using var memoryStream = new MemoryStream();
+        using var cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
+        using var writer = new StreamWriter(cryptoStream);
+        
+        writer.Write(data);
+        writer.Flush();
+        cryptoStream.FlushFinalBlock();
+        
+        return Convert.ToBase64String(memoryStream.ToArray());
+    }
+    public string AesDecryptionString(string encryptedData)
+    {
+        byte[] cipherBytes = Convert.FromBase64String(encryptedData);
+        
+        using Aes aesAlg = Aes.Create();
+        aesAlg.Key = DataBaseAesKey;
+        aesAlg.IV = DataBaseAesIv;
+
+        using MemoryStream msDecrypt = new MemoryStream(cipherBytes);
+        using CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesAlg.CreateDecryptor(), CryptoStreamMode.Read);
+        using StreamReader srDecrypt = new StreamReader(csDecrypt);
+        
+        return srDecrypt.ReadToEnd();
+    }
     public static (string KeyBase64, string IVBase64) GeneratedAes256KeyBase64String()
     {
         using var aes = Aes.Create();
@@ -32,4 +62,5 @@ class Cryptor{
             Convert.ToBase64String(rsa.ExportRSAPrivateKey())
         );
     }
+
 }
