@@ -1,8 +1,6 @@
-// dotnet add package MongoDB.Driver
 using MongoDB.Driver;
- 
-MongoClient client = new MongoClient("mongodb://SaqurDB:root@localhost:27017");
-using (var cursor = await client.ListDatabasesAsync())
+
+using (var cursor = await DataBase.DataBaseDB.client.ListDatabasesAsync())
 {
     var databases = cursor.ToList();
     foreach (var database in databases)

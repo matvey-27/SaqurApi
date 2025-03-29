@@ -1,3 +1,4 @@
+// https://learn.microsoft.com/ru-ru/dotnet/api/system.convert.tobase64string?view=net-8.0
 using System.Security.Cryptography;
 
 class Cryptor{
@@ -5,14 +6,12 @@ class Cryptor{
     private byte[] ServerRsaPrivateKey = new byte[256];
     private byte[] DataBaseAesKey = new byte[32];
     private byte[] DataBaseAesIv = new byte[16];
-
     public Cryptor(byte[] ServerRsaOpenKey, byte[] ServerRsaPrivateKey, byte[] DataBaseAesKey, byte[] DataBaseAesIv){
         this.ServerRsaOpenKey = ServerRsaOpenKey;
         this.ServerRsaPrivateKey = ServerRsaPrivateKey;
         this.DataBaseAesKey = DataBaseAesKey;
         this.DataBaseAesIv = DataBaseAesIv;
     }
-
     public static (string KeyBase64, string IVBase64) GeneratedAes256KeyBase64String()
     {
         using var aes = Aes.Create();
