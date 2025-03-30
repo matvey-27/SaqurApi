@@ -17,11 +17,13 @@ class UserDB{
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
-        var filter = new BsonDocument { { "login", login },
-                                        { "password", password } };
+        var filter = new BsonDocument { { "login", login } };
 
         if (!(await collection.Find(filter).AnyAsync())){
-            User NewUser = new User { login = login,
+            long count = await collection.CountDocumentsAsync(new BsonDocument());
+
+            User NewUser = new User { id = (int)(count + 1),
+                                      login = login,
                                       password = password};
 
             Console.WriteLine(NewUser.ToBsonDocument());

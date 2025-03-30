@@ -1,8 +1,8 @@
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 public class Token
 {
-    [BsonId]
     public int id { get; set; }
     public string? token { get; set; }
     public string? ClientRsaOpenKey{ get; set; }

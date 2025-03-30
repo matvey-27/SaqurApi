@@ -1,8 +1,8 @@
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 public class User
 {
-    [BsonId]
     public int id { get; set; }
     public string? login { get; set; }
     public string? password { get; set; }
