@@ -21,8 +21,16 @@ class UserDB{
         if (!(await user.AnyAsync())){
             return "Incorrect login or password";
         }
+        
+        // User NewUser = new User {
+                                
+        //                         login = ServerInfo.ServerCryptor.AesEncryptionStringDataBaseKey(login),
+        //                         password = ServerInfo.ServerCryptor.AesEncryptionStringDataBaseKey(password)
+        //                         };
 
-        Console.WriteLine(user.ToList()[1]);
+        // var update = Builders<BsonDocument>.Update.Push("d", "s");
+
+        Console.WriteLine(user.ToList()[0]["login"]);
 
         return "";
     }
