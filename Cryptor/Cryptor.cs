@@ -58,7 +58,7 @@ class Cryptor{
         }
     }
 
-    public string AesEncryptionString(string data)
+    public string AesEncryptionStringDataBaseKey(string data)
     {
         using Aes aes = Aes.Create();
         aes.Key = DataBaseAesKey;
@@ -74,7 +74,7 @@ class Cryptor{
         
         return Convert.ToBase64String(memoryStream.ToArray());
     }
-    public string AesDecryptionString(string encryptedData)
+    public string AesDecryptionStringDataBaseKey(string encryptedData)
     {
         byte[] cipherBytes = Convert.FromBase64String(encryptedData);
         
