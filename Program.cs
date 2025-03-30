@@ -4,4 +4,4 @@ using DataBase;
 // Console.WriteLine(ServerInfo.ServerCryptor.AesEncryptionString("hello world"));
 // Console.WriteLine(ServerInfo.ServerCryptor.AesDecryptionString(ServerInfo.ServerCryptor.AesEncryptionString("hello world")));
 
-UserDB.CreateCollectionUser();
+await UserDB.SingInUserAsync("fff", "fffff");

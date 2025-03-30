@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace DataBase;
 
@@ -9,10 +10,25 @@ class UserDB{
     public static void CreateCollectionUser(){      
         userdb.CreateCollection("users");
     }
+
+
+
     public static async Task<string> SingInUserAsync(string login , string password){
 
+        var collection = userdb.GetCollection<BsonDocument>("users");
 
+        var filter = new BsonDocument { { "login", login },
+                                        { "password", password } };
 
-        return "dd";
+        if (!(await collection.Find(filter).AnyAsync())){
+            User NewUser = new User { login = login,
+                                      password = password};
+
+            Console.WriteLine(NewUser.ToBsonDocument());
+
+            await collection.InsertOneAsync(NewUser.ToBsonDocument());
+        } 
+
+        return "";
     } 
 }
