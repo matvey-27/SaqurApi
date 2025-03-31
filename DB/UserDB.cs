@@ -9,32 +9,35 @@ class UserDB{
     public static void CreateCollectionUser(){      
         userdb.CreateCollection("users");
     }
-    public static async Task<String> SingInUserTokenAsync(string login , string password){
+    public static async Task<String> SingInUserTokenAsync(string login , string password, string ClientRsaOpenKey){
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
-        var filter = new BsonDocument { { "login", login },
+        var filter = new BsonDocument { { "login", login  },
                                         { "password", password } };
         
-        var user = collection.Find(filter);
+        var userF = collection.Find(filter);
 
-        if (!(await user.AnyAsync())){
+        if (!(await userF.AnyAsync())){
             return "Incorrect login or password";
         }
+
+        var user = userF.ToList();
         
-        // User NewUser = new User {
-                                
-        //                         login = ServerInfo.ServerCryptor.AesEncryptionStringDataBaseKey(login),
-        //                         password = ServerInfo.ServerCryptor.AesEncryptionStringDataBaseKey(password)
-        //                         };
+        Token NewToken = new Token {
+                                token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
+                                ClientRsaOpenKey = ClientRsaOpenKey
+                                };
 
-        // var update = Builders<BsonDocument>.Update.Push("d", "s");
+        var update = Builders<BsonDocument>.Update.Push("tokenList", NewToken.ToBsonDocument());
 
-        Console.WriteLine(user.ToList()[0]["login"]);
+        var result = await collection.UpdateManyAsync(filter, update);
+                        
+        Console.WriteLine(result + "fff");
 
         return "";
     }
-    public static async Task<bool> SingInUserAsync(string login , string password){
+    public static async Task<bool> SingInUserAsync(string login , string password, string ClientRsaOpenKey){
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
@@ -43,10 +46,16 @@ class UserDB{
         if (!(await collection.Find(filter).AnyAsync())){
             long count = await collection.CountDocumentsAsync(new BsonDocument());
 
+            // Token NewToken = new Token {
+            //                     token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
+            //                     ClientRsaOpenKey = ClientRsaOpenKey
+            //                     };
+
             User NewUser = new User {
                                     id = (int)(count + 1),
-                                    login = ServerInfo.ServerCryptor.AesEncryptionStringDataBaseKey(login),
-                                    password = ServerInfo.ServerCryptor.AesEncryptionStringDataBaseKey(password)
+                                    login = login,
+                                    password = password,
+                                    tokenList = new List<Token>()
                                     };
 
             Console.WriteLine(NewUser.ToBsonDocument());
