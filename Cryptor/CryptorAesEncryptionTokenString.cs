@@ -1,9 +1,14 @@
-// https://learn.microsoft.com/ru-ru/dotnet/api/system.convert.tobase64string?view=net-8.0
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
+// https://learn.microsoft.com/ru-ru/dotnet/api/system.bitconverter.tostring?view=net-8.0 
+// BitConverter.ToString Метод
 
-class Cryptor{
+// https://stackoverflow.com/questions/724862/converting-from-hex-to-string  
+// Как в C# строку, полученную через (BitConverter), преобразовать обратно в byte[]?
+
+using System.Security.Cryptography;
+
+namespace SaqurApi.Crypton;
+
+public partial class Cryptor{
     public static string AesEncryptionTokenString(string data)
     {
         using Aes aes = Aes.Create();

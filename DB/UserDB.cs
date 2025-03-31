@@ -2,7 +2,9 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
 
-namespace DataBase;
+using SaqurApi.Crypton;
+
+namespace SaqurApi.DataBase;
 
 class UserDB{
     private static IMongoDatabase userdb = DataBaseDB.client.GetDatabase("user"); 
