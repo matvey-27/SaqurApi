@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 
 using SaqurApi.Crypton;
+using SaqurApi.Model;
 
 namespace SaqurApi.DataBase;
 

@@ -1,7 +1,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
-namespace SaqurApi;
+namespace SaqurApi.Model;
 
 public class Token
 {
