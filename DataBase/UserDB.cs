@@ -15,8 +15,8 @@ class UserDB{
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
-        var filter = new BsonDocument { { "login", login  },
-                                        { "password", password } };
+        var filter = new BsonDocument { { "login", ServerInfo.cryptor.AesEncryptionStringToHexString(login)  },
+                                        { "password", ServerInfo.cryptor.AesEncryptionStringToHexString(password) } };
         
         var userF = collection.Find(filter);
 
@@ -43,7 +43,7 @@ class UserDB{
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
-        var filter = new BsonDocument { { "login", login } };
+        var filter = new BsonDocument { { "login", ServerInfo.cryptor.AesEncryptionStringToHexString(login) } };
 
         if (!(await collection.Find(filter).AnyAsync())){
             long count = await collection.CountDocumentsAsync(new BsonDocument());
