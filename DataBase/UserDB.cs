@@ -27,7 +27,7 @@ class UserDB{
         var user = userF.ToList();
         
         Token NewToken = new Token {
-                                token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
+                                token = ServerInfo.cryptor.AesEncryptionStringToHexString(Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"])),
                                 clientRsaOpenKey = ServerInfo.cryptor.AesEncryptionStringToHexString(clientRsaOpenKey)
                                 };
 
