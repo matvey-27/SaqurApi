@@ -6,6 +6,6 @@ namespace SaqurApi.Model;
 public class Token
 {
     public string? token { get; set; }
-    public string? ClientRsaOpenKey{ get; set; }
+    public string? clientRsaOpenKey{ get; set; }
 
 }

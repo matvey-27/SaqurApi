@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
 
-using SaqurApi.Crypton;
 using SaqurApi.Model;
 
 namespace SaqurApi.DataBase;
@@ -12,7 +11,7 @@ class UserDB{
     public static void CreateCollectionUser(){      
         userdb.CreateCollection("users");
     }
-    public static async Task<String> SingInUserTokenAsync(string login , string password, string ClientRsaOpenKey){
+    public static async Task<String> SingInUserTokenAsync(string login , string password, string clientRsaOpenKey){
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
@@ -29,7 +28,7 @@ class UserDB{
         
         Token NewToken = new Token {
                                 token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
-                                ClientRsaOpenKey = ClientRsaOpenKey
+                                clientRsaOpenKey = ServerInfo.cryptor.AesEncryptionStringToHexString(clientRsaOpenKey)
                                 };
 
         var update = Builders<BsonDocument>.Update.Push("tokenList", NewToken.ToBsonDocument());
@@ -40,7 +39,7 @@ class UserDB{
 
         return "";
     }
-    public static async Task<bool> SingInUserAsync(string login , string password, string ClientRsaOpenKey){
+    public static async Task<bool> SingInUserAsync(string login , string password, string clientRsaOpenKey){
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
@@ -51,13 +50,13 @@ class UserDB{
 
             // Token NewToken = new Token {
             //                     token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
-            //                     ClientRsaOpenKey = ClientRsaOpenKey
+            //                     clientRsaOpenKey = clientRsaOpenKey
             //                     };
 
             User NewUser = new User {
                                     id = (int)(count + 1),
-                                    login = login,
-                                    password = password,
+                                    login = ServerInfo.cryptor.AesEncryptionStringToHexString(login),
+                                    password = ServerInfo.cryptor.AesEncryptionStringToHexString(password),
                                     tokenList = new List<Token>()
                                     };
 
