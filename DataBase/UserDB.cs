@@ -7,7 +7,7 @@ using SaqurApi.Model;
 namespace SaqurApi.DataBase;
 
 class UserDB{
-    private static IMongoDatabase userdb = DataBaseDB.client.GetDatabase("user"); 
+    private static IMongoDatabase userdb = DataBase.client.GetDatabase("user"); 
     public static void CreateCollectionUser(){      
         userdb.CreateCollection("users");
     }
@@ -57,7 +57,7 @@ class UserDB{
                                     id = (int)(count + 1),
                                     login = ServerInfo.cryptor.AesEncryptionStringToHexString(login),
                                     password = ServerInfo.cryptor.AesEncryptionStringToHexString(password),
-                                    tokenList = new List<Token>()
+                                    tokenList = new List<object>()
                                     };
 
             Console.WriteLine(NewUser.ToBsonDocument());
