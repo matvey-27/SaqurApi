@@ -5,11 +5,11 @@
 // Как в C# строку, полученную через (BitConverter), преобразовать обратно в byte[]?
 
 
-namespace SaqurApi.Crypton;
+namespace SaqurApi;
 
 public partial class Cryptor{
 
-    Cryptor(byte[] AesKeyDataBase, byte[] AesIvDataBase){
+    public Cryptor(byte[] AesKeyDataBase, byte[] AesIvDataBase) {
         this.AesKeyDataBase = AesKeyDataBase;
         this.AesIvDataBase = AesIvDataBase;
     }

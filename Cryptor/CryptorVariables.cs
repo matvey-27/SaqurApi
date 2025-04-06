@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace SaqurApi.Crypton;
+namespace SaqurApi;
 
 public partial class Cryptor{
     private byte[] AesKeyDataBase;

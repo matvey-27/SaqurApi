@@ -2,22 +2,21 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
 
-using SaqurApi.Crypton;
 using SaqurApi.Model;
 
 namespace SaqurApi.DataBase;
 
 class UserDB{
-    private static IMongoDatabase userdb = DataBaseDB.client.GetDatabase("user"); 
+    private static IMongoDatabase userdb = DataBase.client.GetDatabase("user"); 
     public static void CreateCollectionUser(){      
         userdb.CreateCollection("users");
     }
-    public static async Task<String> SingInUserTokenAsync(string login , string password, string ClientRsaOpenKey){
+    public static async Task<String> SingInUserTokenAsync(string login , string password, string clientRsaOpenKey){
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
-        var filter = new BsonDocument { { "login", login  },
-                                        { "password", password } };
+        var filter = new BsonDocument { { "login", ServerInfo.cryptor.AesEncryptionStringToHexString(login)  },
+                                        { "password", ServerInfo.cryptor.AesEncryptionStringToHexString(password) } };
         
         var userF = collection.Find(filter);
 
@@ -28,8 +27,8 @@ class UserDB{
         var user = userF.ToList();
         
         Token NewToken = new Token {
-                                token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
-                                ClientRsaOpenKey = ClientRsaOpenKey
+                                token = ServerInfo.cryptor.AesEncryptionStringToHexString(Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"])),
+                                clientRsaOpenKey = ServerInfo.cryptor.AesEncryptionStringToHexString(clientRsaOpenKey)
                                 };
 
         var update = Builders<BsonDocument>.Update.Push("tokenList", NewToken.ToBsonDocument());
@@ -40,25 +39,25 @@ class UserDB{
 
         return "";
     }
-    public static async Task<bool> SingInUserAsync(string login , string password, string ClientRsaOpenKey){
+    public static async Task<bool> SingInUserAsync(string login , string password, string clientRsaOpenKey){
 
         var collection = userdb.GetCollection<BsonDocument>("users");
 
-        var filter = new BsonDocument { { "login", login } };
+        var filter = new BsonDocument { { "login", ServerInfo.cryptor.AesEncryptionStringToHexString(login) } };
 
         if (!(await collection.Find(filter).AnyAsync())){
             long count = await collection.CountDocumentsAsync(new BsonDocument());
 
             // Token NewToken = new Token {
             //                     token = Cryptor.AesEncryptionTokenString(DateTime.UtcNow.ToString() + user[0]["login"]),
-            //                     ClientRsaOpenKey = ClientRsaOpenKey
+            //                     clientRsaOpenKey = clientRsaOpenKey
             //                     };
 
             User NewUser = new User {
                                     id = (int)(count + 1),
-                                    login = login,
-                                    password = password,
-                                    tokenList = new List<Token>()
+                                    login = ServerInfo.cryptor.AesEncryptionStringToHexString(login),
+                                    password = ServerInfo.cryptor.AesEncryptionStringToHexString(password),
+                                    tokenList = new List<object>()
                                     };
 
             Console.WriteLine(NewUser.ToBsonDocument());
